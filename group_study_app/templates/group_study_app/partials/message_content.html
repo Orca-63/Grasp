@@ -1,0 +1,20 @@
+{% if message.body %}
+    {% if message.message_type == 'latex' %}
+        <div class="latex-message">
+            \[{{ message.body|safe }}\]
+        </div>
+    {% else %}
+        <div class="text-message">
+            {{ message.body|linebreaksbr }}
+        </div>
+    {% endif %}
+{% elif message.file %}
+    {% if message.is_image %}
+        <img class="max-w-72 min-w-8" src="{{ message.file.url }}" />
+    {% else %}
+        &#x1F4CE;
+        <a class="cursor-pointer italic hover:underline" href="{{ message.file.url }}" download>
+            {{ message.filename }}
+        </a>
+    {% endif %}
+{% endif %}

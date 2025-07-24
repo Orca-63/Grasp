@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    container_name: django-app
+    command: daphne -b 0.0.0.0 -p 8000 a_core.asgi:application
+    environment:
+      - DJANGO_SETTINGS_MODULE=a_core.settings
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:8.0
+    container_name: redis_channels
+    ports:
+      - "6379:6379"

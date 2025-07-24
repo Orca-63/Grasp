@@ -1,0 +1,33 @@
+<span id="online-count" hx-swap-oob="outerHTML" class="fade-in-scale pr-1 text-white font-medium">
+    {{ online_count }}
+    
+</span>
+{% if online_count %}
+<div id="online-icon" class="w-3 h-3 bg-green-400 rounded-full"></div>
+{% else %}
+<div id="online-icon" class="w-3 h-3 bg-gray-400 rounded-full"></div>
+{% endif %}
+<ul id="groupchat-members" class="flex gap-3 justify-center flex-wrap">
+    {% for member in chat_group.members.all %}
+    <li>
+        <a href="{% url 'profile' member.username %}" class="flex flex-col items-center justify-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-colors group">
+            <div class="relative">
+                {% if member in chat_group.users_online.all %}
+                <div class="w-4 h-4 bg-green-400 rounded-full border-2 border-white shadow-sm absolute -bottom-1 -right-1"></div>
+                {% else %}
+                <div class="w-4 h-4 bg-gray-400 rounded-full border-2 border-white shadow-sm absolute -bottom-1 -right-1"></div>
+                {% endif %}
+                <img src="{{ member.profile.avatar }}" class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm group-hover:shadow-md transition-shadow" />
+            </div>
+            <span class="text-xs text-white font-medium text-center leading-tight group-hover:text-blue-100 transition-colors">{{ member.profile.name|slice:":10" }}</span>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% for user in users %}
+    {% if user in chat_group.users_online.all %}
+    <div id="user-{{ user.id }}" class="w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-sm absolute -bottom-1 -right-1"></div>
+    {% else %}
+    <div id="user-{{ user.id }}" class="w-3 h-3 bg-gray-400 rounded-full border-2 border-white shadow-sm absolute -bottom-1 -right-1"></div>
+    {% endif %}
+{% endfor %}

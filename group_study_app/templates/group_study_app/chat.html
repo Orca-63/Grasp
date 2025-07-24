@@ -1,0 +1,411 @@
+{% extends 'layouts/blank.html' %}
+
+{% block content %}
+
+<wrapper class="block max-w-4xl mx-auto my-8 px-6">
+    {% if chat_group.groupchat_name %}
+    <div
+        class="flex justify-between items-center mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253z">
+                    </path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-blue-800">{{ chat_group.groupchat_name }}</h2>
+
+            </div>
+        </div>
+        {% if user == chat_group.admin %}
+        <a href="{% url 'edit-chatroom' chat_group.group_name %}">
+
+            <div
+                class="p-3 bg-white hover:bg-blue-600 rounded-lg border border-gray-200 hover:border-blue-600 group transition-all duration-200 shadow-sm">
+                <svg class="fill-gray-600 group-hover:fill-white transition-colors" width="18" height="18">
+                    <path
+                        d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z">
+                    </path>
+                </svg>
+            </div>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div id="chat_window"
+        class="h-[50rem] flex flex-col bg-white rounded-2xl shadow-xl border border-gray-200 relative overflow-hidden">
+
+        <div class="flex justify-center bg-[#041B36] p-4 border-b border-gray-200 relative">
+
+
+            <div class="absolute left-4 top-1/2 transform -translate-y-1/2">
+                <svg width="180" height="50" viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+
+                    <defs>
+
+                        <linearGradient id="blueGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+
+                            <stop offset="0%" stop-color="#1e3a8a" />
+
+                            <stop offset="100%" stop-color="#2563eb" />
+
+                        </linearGradient>
+
+                        <linearGradient id="blueGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+
+                            <stop offset="0%" stop-color="#93c5fd" />
+
+                            <stop offset="100%" stop-color="#3b82f6" />
+
+                        </linearGradient>
+
+                    </defs>
+
+
+
+                    <rect width="100%" height="100%" fill="#041B36" rx="8" />
+
+
+
+                    <g transform="translate(15, 15)">
+
+                        <rect x="0" y="15" width="25" height="35" rx="3" fill="url(#blueGrad1)"
+                            transform="rotate(-15 0 15)" />
+
+                        <rect x="30" y="5" width="25" height="35" rx="3" fill="#93c5fd" />
+
+                        <rect x="60" y="15" width="25" height="35" rx="3" fill="url(#blueGrad2)"
+                            transform="rotate(15 60 15)" />
+
+
+
+
+
+                        <circle cx="5" cy="10" r="4" fill="#60a5fa" />
+
+                        <circle cx="85" cy="10" r="4" fill="#60a5fa" />
+
+                        <circle cx="42.5" cy="0" r="5" fill="#bfdbfe" />
+
+                    </g>
+
+
+
+                    <text x="120" y="45" font-family="'Altair Two BC', sans-serif" font-size="28" fill="#ffffff"
+                        letter-spacing="5">
+
+                        GRASP
+
+                    </text>
+
+
+
+                    <text x="120" y="65" font-family="'Encode Sans Expanded', sans-serif" font-size="10" fill="#60a5fa"
+                        letter-spacing="2">
+
+                        Don’t just chat — GRASP it!
+
+                    </text>
+
+                </svg>
+
+
+            </div>
+            {% if other_user %}
+            <div id="online-icon" class="gray-dot absolute top-4 left-4"></div>
+            <a href="{% url 'profile' other_user.username %}">
+                <div class="flex items-center gap-3 p-2">
+                    <div class="relative">
+                        <img class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm"
+                            src="{{ other_user.profile.avatar }}" />
+
+                    </div>
+                    <div>
+                        <span class="font-semibold text-white text-lg">{{ other_user.profile.name }}</span>
+                        <div class="text-sm text-blue-100">@{{ other_user.username }}</div>
+                    </div>
+                </div>
+            </a>
+            {% elif chat_group.groupchat_name %}
+            <div class="w-full">
+                <div class="flex items-center justify-center gap-2 mb-3">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                        </path>
+                    </svg>
+                    <span class="text-white font-medium">Study Group Members</span>
+                </div>
+                <ul id="groupchat-members" class="flex gap-3 justify-center flex-wrap">
+                    {% for member in chat_group.members.all %}
+                    <li>
+                        <a href="{% url 'profile' member.username %}"
+                            class="flex flex-col items-center justify-center gap-2 p-2 hover:bg-white/10 rounded-lg transition-colors">
+                            <div class="relative">
+                                <img src="{{ member.profile.avatar }}"
+                                    class="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm" />
+                                <div
+                                    class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border border-white">
+                                </div>
+                            </div>
+                            <span class="text-xs text-white font-medium text-center leading-tight">{{
+                                member.profile.name|slice:":10" }}</span>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+            <div class="flex items-center gap-2">
+                <div id="online-icon" class="w-3 h-3 bg-green-400 rounded-full"></div>
+                <span id="online-count" class="text-white font-medium pr-1"></span>
+                <span class="text-blue-100">Students Online</span>
+            </div>
+            {% endif %}
+        </div>
+
+
+        <div id='chat_container' class="overflow-y-auto grow ">
+            <ul id='chat_messages' class="flex flex-col justify-end gap-3 p-6">
+                {% for message in chat_messages reversed %}
+                {% include 'group_study_app/chat_message.html' %}
+                {% endfor %}
+            </ul>
+        </div>
+
+
+        <div class="sticky bottom-0 z-10 p-2 border-t border-gray-200" style="background-color: #f8fbff;">
+
+            <div class="flex flex-col gap-4">
+
+                <form id="chat_message_form" class="flex flex-col gap-3" hx-ext="ws"
+                    ws-connect="/ws/chatroom/{{ chatroom_name }}" ws-send _="on htmx:wsAfterSend reset() me">
+
+                    {% csrf_token %}
+
+
+                    <input type="text" name="text_body" id="text_input" />
+                    <input type="hidden" name="latex_body" id="latex_input" />
+
+
+
+                    <div>
+                        <!-- MathLive -->
+                        <math-field id="math_input" virtual-keyboard-mode="manual"
+                            class="w-full min-h-[56px] p-3 border border-gray-300 rounded-lg bg-white"
+                            placeholder="Type an equation...">
+                        </math-field>
+
+                        <!-- Toggle Button -->
+
+                    </div>
+
+                    <!-- Hidden input for sending MathLive content -->
+                    <!-- <input type="hidden" name="body" id="latex_input" /> -->
+
+                    <!-- SEND BUTTON -->
+                    <button type="submit" onclick="handleSend()"
+                        class="mt-2 px-4 py-2 bg-[#32CD9A] hover:bg-[#2EBF8F] text-white rounded-lg font-medium transition-colors shadow-sm">
+                        Send
+                    </button>
+
+
+
+
+                </form>
+
+
+
+
+                <!-- File Upload Form -->
+                <form id="chat_file_form" enctype="multipart/form-data" class="flex items-center gap-3"
+                    hx-post="{% url 'chat-file-upload' chat_group.group_name %}" hx-target="#chat_messages"
+                    hx-swap="beforeend" _="on htmx:beforeSend reset() me">
+                    {% csrf_token %}
+                    <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-3 flex-grow border border-gray-200">
+                        <!-- <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13">
+                            </path>
+                        </svg> -->
+                        <input type="file" name="file" id="id_file"
+                            class="flex-grow bg-transparent text-gray-700 text-sm">
+                    </div>
+                    <button type="submit"
+                        class="px-4 py-2 bg-[#FFC000] hover:bg-[#E6AD00] text-white rounded-lg font-medium transition-colors shadow-sm">
+                        Share File
+                    </button>
+
+
+                </form>
+
+                <!-- Study Tools Quick Actions -->
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 flex justify-center">
+        {% if chat_group.members.exists %}
+        <a href="{% url 'chatroom-leave' chat_group.group_name %}"
+            class="inline-block px-4 py-2 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-md shadow-sm transition-colors duration-200">
+            Leave Group
+        </a>
+
+
+        {% endif %}
+    </div>
+</wrapper>
+
+{% endblock %}
+
+{% block javascript %}
+
+
+<script>
+    function scrollToBottom(time = 0) {
+        setTimeout(function () {
+            const container = document.getElementById('chat_container');
+            container.scrollTop = container.scrollHeight;
+        }, time);
+    }
+    scrollToBottom();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatWindow = document.getElementById('chat_window');
+        if (chatWindow) {
+            chatWindow.classList.add('study-session-active');
+        }
+
+        const chatContainer = document.getElementById('chat_container');
+        if (chatContainer) {
+            chatContainer.addEventListener('scroll', function () {
+                // Add custom scroll behavior if needed
+            });
+        }
+
+
+
+
+
+
+
+
+    });
+</script>
+<script type="module">
+    import { MathfieldElement } from 'https://unpkg.com/mathlive?module';
+
+    window.handleSend = () => {
+        const mathInput = document.getElementById('math_input');
+        const latexInput = document.getElementById('latex_input');
+        const textInput = document.getElementById('text_input');
+
+
+        const latex = mathInput.getValue();
+        if (latex && latex.trim() !== '') {
+            latexInput.value = latex;
+            textInput.value = '';
+        } else {
+            latexInput.value = '';
+        }
+
+
+    };
+
+</script>
+<!-- Load MathJax -->
+
+
+
+<!-- Re-render Math after new HTMX content -->
+
+<script>
+    function renderMath(node) {
+        if (window.MathJax && MathJax.typesetPromise) {
+            MathJax.typesetPromise([node])
+                .catch(err => console.error("MathJax render error:", err));
+        } else {
+            console.warn("MathJax not ready, retrying...");
+            setTimeout(() => renderMath(node), 100);
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const chatroomName = "{{ chatroom_name }}";
+        const socket = new WebSocket("ws://" + window.location.host + "/ws/chatroom/" + chatroomName);
+
+        socket.onmessage = function (event) {
+            const inputField = document.getElementById("message_input");
+
+            const tempDiv = document.createElement("div");
+            tempDiv.innerHTML = event.data.trim();
+            const newMessageWrapper = tempDiv.firstElementChild;
+
+            // Let HTMX handle the OOB swap — don't append manually
+            if (inputField) inputField.value = "";
+            const mathField = document.querySelector("math-field");
+            if (mathField) mathField.setValue("");
+
+            // Delay MathJax rendering slightly to wait for DOM swap to complete
+            setTimeout(() => {
+                const latexBlocks = document.querySelectorAll('.latex-message');
+                if (latexBlocks.length > 0) {
+                    MathJax.typesetPromise(Array.from(latexBlocks))
+                        .then(() => console.log("LaTeX rendered"))
+                        .catch(err => console.error("MathJax render error:", err));
+                }
+            }, 100);
+        };
+
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+<style>
+    .study-session-active {
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+    }
+
+    #chat_message_form input,
+    #chat_message_form textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 8px;
+        border: 1px solid #d1d5db;
+        background-color: white;
+        color: #111827;
+    }
+
+    #chat_message_form input:focus,
+    #chat_message_form textarea:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        border-color: #3b82f6;
+    }
+
+    #chat_message_form input::placeholder,
+    #chat_message_form textarea::placeholder {
+        color: #6b7280;
+    }
+
+    .gray-dot {
+        width: 12px;
+        height: 12px;
+        background-color: #10b981;
+        border-radius: 50%;
+        border: 2px solid white;
+    }
+</style>
+{% endblock %}

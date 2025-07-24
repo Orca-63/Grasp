@@ -1,0 +1,43 @@
+{% if message.author == user %}
+<li class="flex justify-end mb-4">
+    <div class=" border border-blue-200 text-blue-900 rounded-l-xl rounded-tr-xl p-4 max-w-[75%] shadow-sm">
+        {% include 'group_study_app/partials/message_content.html'%}
+    </div>
+    <div class="flex items-end">
+        <svg height="13" width="8">
+            <path fill="#dbeafe" d="M6.3,10.4C1.5,8.7,0.9,5.5,0,0.2L0,13l5.2,0C7,13,9.6,11.5,6.3,10.4z" />
+        </svg>
+    </div>
+</li>
+{% else %}
+<li class="mb-4">
+    <div class="flex justify-start">
+        <div class="flex items-end mr-3">
+            <a href="{% url 'profile' message.author.username %}">
+                <div class="relative group">
+                    <div id="user-{{ message.author.id }}"></div>
+                    <img class="w-10 h-10 rounded-full object-cover border-2 border-gray-200 shadow-sm group-hover:shadow-md transition-shadow"
+                        src="{{ message.author.profile.avatar }}">
+
+                </div>
+            </a>
+        </div>
+        <div class="flex items-end">
+            <svg height="13" width="8">
+                <path fill="#f9fafb" d="M2.8,13L8,13L8,0.2C7.1,5.5,6.5,8.7,1.7,10.4C-1.6,11.5,1,13,2.8,13z"></path>
+            </svg>
+        </div>
+        <div class="border border-gray-200 p-4 max-w-[75%] rounded-r-xl rounded-tl-xl shadow-sm"
+            style="background-color: #f8fbff;">
+
+
+            {% include 'group_study_app/partials/message_content.html'%}
+        </div>
+    </div>
+    <div class="text-xs font-medium py-2 ml-13 flex items-center gap-2">
+        <div class="w-2 h-2  rounded-full opacity-60"></div>
+        <span class="text-gray-700">{{ message.author.profile.name }}</span>
+
+    </div>
+</li>
+{% endif %}
