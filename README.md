@@ -91,8 +91,8 @@ We welcome contributions! Here's how you can help:
 5. Open a Pull Request
 
 
-Built with 💙 by students, for students.
+
 
 ---
+**Start collaborating today!** Built with 💙 by students, for students - a platform designed to help peers excel in their studies together.
 
-**Start collaborating today!** Join thousands of students already using Grasp to excel in their studies together.
