@@ -38,7 +38,7 @@ A real-time collaborative learning platform that brings students together for se
 - **Cache/Message Broker**: Redis for scalable real-time messaging
 - **Math Rendering**: MathJax for LaTeX equation display
 - **Containerization**: Docker for consistent deployment
-- **Frontend**: Modern HTML/CSS/JavaScript with responsive design
+- **Frontend**: Modern HTML/CSS/JavaScript, HTMX and Tailwind CSS with responsive design
 
 ## Quick Start 🏃‍♂️
 
@@ -57,9 +57,9 @@ A real-time collaborative learning platform that brings students together for se
    ```
 
 2. **Set up environment variables**
-  
-   # Edit .env with your configuration
-   
+   ```bash
+   Edit .env with your configurations
+   ```
 
 3. **Run with Docker**
    ```bash
